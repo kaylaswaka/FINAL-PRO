@@ -1,0 +1,75 @@
+---
+title: "Final"
+format: html
+editor: 
+  name: "Kayla Swaka"
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+```{r}
+library(tidyverse)
+
+airquality <- read.csv("data/air-quality.csv")
+
+# What is the distribution of air quality for Flushing and Whitestone (CD7)?
+
+flushing_data <- airquality |>
+  filter(Geo.Place.Name == "Flushing and Whitestone (CD7)")
+
+ggplot(data = flushing_data, aes(x = Data.Value)) + 
+  geom_histogram(bins = 10)
+
+ggplot(data = flushing_data, aes(y = Data.Value, x = Time.Period)) + 
+  geom_boxplot()
+
+# What are the mean, standard deviation, minimum, and 
+# maximum Nitrogen Dioxide levels by Time Period?
+
+flushing_data <- airquality |>
+  group_by(Time.Period) |>
+  summarize(
+    mean_value = mean(Data.Value, na.rm = TRUE),
+    sd_value = sd(Data.Value, na.rm = TRUE),
+    min_value = min(Data.Value, na.rm = TRUE),
+    max_value = max(Data.Value, na.rm = TRUE)
+  )
+print(flushing_data)
+
+# Two sample t-test 
+two_groups <- airquality |>
+  filter(Time.Period %in% c("Winter 2014-15", "Summer 2016"))
+t.test(Data.Value ~ Time.Period, data = two_groups)
+
+# Visual Data Boxplot
+two_groups <- airquality |>
+  filter(Time.Period %in% c("Winter 2014-15", "Summer 2016"))
+
+ggplot(two_groups, aes(x = Time.Period, y = Data.Value, fill = Time.Period)) +
+  geom_boxplot() +
+  labs(
+    x = "Time Period",
+    y = "Nitrogen Dioxide (ppb)"
+  )
+
+
+```
